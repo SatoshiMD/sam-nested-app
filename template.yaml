@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 5
+
+Resources:
+  SampleMyLayer:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: common-layer-sample/template.yaml
+  SampleMyLambdas:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: sam-lambda-sample/template.yaml
