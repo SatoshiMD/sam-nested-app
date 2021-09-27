@@ -14,6 +14,7 @@ Parameters:
   Layer:
     Type: String
     Default: arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
+              #   !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample-my-layer:1
 
 Resources:
   SampleLambdaFunction:
@@ -27,8 +28,5 @@ Resources:
 
 Outputs:
   SampleLambdaFunction:
-    Description: "Hello World Lambda Function ARN"
+    Description: "Sample Lambda Function ARN"
     Value: !GetAtt SampleLambdaFunction.Arn
-  SampleLambdaFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt SampleLambdaFunctionRole.Arn

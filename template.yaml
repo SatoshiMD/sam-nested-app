@@ -14,3 +14,11 @@ Resources:
     Type: AWS::Serverless::Application
     Properties:
       Location: sam-lambda-sample/template.yaml
+
+Outputs:
+  SampleMyLayer:
+    Description: "Sample Layer ARN"
+    Value: !Ref SampleMyLayer
+  SampleMyLambdas:
+    Description: "Sample My Lambdas ARN"
+    Value: !Ref SampleMyLambdas
