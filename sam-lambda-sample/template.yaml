@@ -13,6 +13,8 @@ Globals:
 Parameters:
   ENV:
     Type: String
+  ApiId:
+    Type: String
   Layer:
     Type: String
     Default: arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
@@ -27,6 +29,13 @@ Resources:
       Runtime: python3.9
       Layers:
         - !Ref Layer
+      Events:
+        SampleLambdaApi:
+          Type: Api
+          Properties:
+            Path: /sample
+            Method: get
+            RestApiId: !Ref ApiId
 
 Outputs:
   SampleLambdaFunction:
