@@ -11,6 +11,10 @@ Parameters:
     default: dev
 
 Resources:
+  SampleBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join [ "", [ "sample-bucket", "-", !Ref Env ] ]
   SampleRestApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -28,6 +32,7 @@ Resources:
       Location: sam-lambda-sample/template.yaml
       Parameters:
         ApiId: !Ref SampleRestApi
+        SamplebucketArn: !Ref SampleBucket
 
 Outputs:
   SampleMyLayer:
