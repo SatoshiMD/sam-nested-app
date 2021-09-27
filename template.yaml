@@ -11,6 +11,13 @@ Parameters:
     default: dev
 
 Resources:
+  SampleRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Env
+      Domain:
+        BasePath:
+          - /api
   SampleMyLayer:
     Type: AWS::Serverless::Application
     Properties:
@@ -19,6 +26,8 @@ Resources:
     Type: AWS::Serverless::Application
     Properties:
       Location: sam-lambda-sample/template.yaml
+      Parameters:
+        ApiId: !Ref SampleRestApi
 
 Outputs:
   SampleMyLayer:
