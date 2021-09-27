@@ -17,8 +17,8 @@ Parameters:
     Type: String
   Layer:
     Type: String
-    Default: arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
-              #   !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample-my-layer:1
+    Default: !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample-my-layer:1'
+              # arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
 
 Resources:
   SampleLambdaFunction:
