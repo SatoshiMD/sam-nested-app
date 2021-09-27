@@ -19,3 +19,8 @@ Resources:
       CompatibleRuntimes:
         - python3.9
       RetentionPolicy: Retain
+
+Outputs:
+  SampleMyLayer:
+    Description: Sample My Layer ARN"
+    Value: !Ref SampleMyLayer
