@@ -11,7 +11,7 @@ Globals:
     Timeout: 30
 
 Resources:
-  SampleMyLayer:
+  MyLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: sample-my-layer
@@ -21,6 +21,6 @@ Resources:
       RetentionPolicy: Retain
 
 Outputs:
-  SampleMyLayer:
+  MyLayer:
     Description: Sample My Layer ARN"
-    Value: !Ref SampleMyLayer
+    Value: !Ref MyLayer
