@@ -14,7 +14,7 @@ Resources:
   MyLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: sample-my-layer
+      LayerName: myLayer
       ContentUri: my_layer/
       CompatibleRuntimes:
         - python3.9
