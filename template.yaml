@@ -8,13 +8,13 @@ Globals:
 Parameters:
   ENV:
     Type: String
-    Default: dev
+    Default: satoshi
 
 Resources:
   SampleBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "", [ "sample-bucket", "-", "dev"] ]
+      BucketName: !Join [ "", [ "satoshi-sample-bucket", "-", "dev"] ]
   # SampleRestApi:
   #   Type: AWS::Serverless::Api
   #   Properties:

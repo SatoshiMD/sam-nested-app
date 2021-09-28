@@ -15,7 +15,8 @@ Parameters:
     Type: String
   Layer:
     Type: String
-    Default: arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
+    Default: ''
+    # Default: arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
   SamplebucketName:
     Type: String
   SamplebucketArn:
@@ -29,16 +30,16 @@ Resources:
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.7
       Policies:
         - Version: "2012-10-17"
           Statement:
             - Effect: Allow
               Action:
-                - s3:GetObject
-              Resource: '*'
-      Layers:
-        - !Ref Layer
+                - s3:*
+              Resource: "*"
+      # Layers:
+      #   - !Ref Layer
       Environment:
         Variables:
           SamplebucketName: !Ref SamplebucketName
