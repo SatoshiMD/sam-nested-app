@@ -36,13 +36,13 @@ Resources:
         Variables:
           SamplebucketName: !Ref SamplebucketName
           BucketArn: !Ref SamplebucketArn
-      Events:
-        SampleLambdaApi:
-          Type: Api
-          Properties:
-            Path: /sample
-            Method: get
-            RestApiId: !Ref ApiId
+      # Events:
+      #   SampleLambdaApi:
+      #     Type: Api
+      #     Properties:
+      #       Path: /sample
+      #       Method: get
+      #       RestApiId: !Ref ApiId
 
 Outputs:
   SampleLambdaFunction:
