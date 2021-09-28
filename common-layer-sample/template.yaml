@@ -21,7 +21,7 @@ Resources:
       LayerName: MyLayer
       ContentUri: my_layer/
       CompatibleRuntimes:
-        - python3.7
+        - python3.9
       RetentionPolicy: Retain
 
 Outputs:

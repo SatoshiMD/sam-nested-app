@@ -14,11 +14,7 @@ Resources:
   SampleBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "", [ "satoshi-sample-bucket", "-", "dev"] ]
-  # SampleRestApi:
-  #   Type: AWS::Serverless::Api
-  #   Properties:
-  #     StageName: dev
+      BucketName: !Join [ "", [ "sample-bucket", "-", "satoshi"] ]
   SampleMyLayer:
     Type: AWS::Serverless::Application
     Properties:
@@ -27,13 +23,15 @@ Resources:
         ENV: !Ref ENV
   SampleMyLambdas:
     Type: AWS::Serverless::Application
+    DependsOn:
+      - SampleMyLayer
+      - SampleBucket
     Properties:
       Location: sam-lambda-sample/template.yaml
       Parameters:
         ENV: !Ref ENV
         SamplebucketName: !Ref SampleBucket
         SamplebucketArn: !GetAtt SampleBucket.Arn
-        # ApiId: !GetAtt SampleRestApi.Arn
 
 Outputs:
   SampleMyLayer:
