@@ -10,6 +10,10 @@ Globals:
   Function:
     Timeout: 30
 
+Parameters:
+  ENV:
+    Type: String
+
 Resources:
   MyLayer:
     Type: AWS::Serverless::LayerVersion

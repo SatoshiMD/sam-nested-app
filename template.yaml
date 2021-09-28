@@ -4,35 +4,36 @@ Transform: AWS::Serverless-2016-10-31
 Globals:
   Function:
     Timeout: 5
-    
+
 Parameters:
   ENV:
     Type: String
-    default: dev
+    Default: dev
 
 Resources:
   SampleBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "", [ "sample-bucket", "-", !Ref Env ] ]
-  SampleRestApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: !Ref Env
-      Domain:
-        BasePath:
-          - /api
+      BucketName: !Join [ "", [ "sample-bucket", "-", "dev"] ]
+  # SampleRestApi:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: dev
   SampleMyLayer:
     Type: AWS::Serverless::Application
     Properties:
       Location: common-layer-sample/template.yaml
+      Parameters:
+        ENV: !Ref ENV
   SampleMyLambdas:
     Type: AWS::Serverless::Application
     Properties:
       Location: sam-lambda-sample/template.yaml
       Parameters:
-        ApiId: !Ref SampleRestApi
-        SamplebucketArn: !Ref SampleBucket
+        ENV: !Ref ENV
+        SamplebucketName: !Ref SampleBucket
+        SamplebucketArn: !GetAtt SampleBucket.Arn
+        ApiId: !GetAtt SampleRestApi.Arn
 
 Outputs:
   SampleMyLayer:

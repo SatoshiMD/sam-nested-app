@@ -1,4 +1,5 @@
 import json
+import os
 
 from my_layer import sample_summation
 
@@ -24,6 +25,8 @@ def lambda_handler(event, context):
 
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
+    bucket = os.getenv('Bucket')
+    print(bucket)
 
     arr = [i for i in range(10)]
     s = sample_summation(arr)

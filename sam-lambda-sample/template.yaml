@@ -13,14 +13,15 @@ Globals:
 Parameters:
   ENV:
     Type: String
-  ApiId:
-    Type: String
   Layer:
     Type: String
-    Default: !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample-my-layer:1'
-              # arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
+    Default: arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
+  SamplebucketName:
+    Type: String
   SamplebucketArn:
     Type: String
+  # ApiId:
+  #   Type: String
 
 Resources:
   SampleLambdaFunction:
@@ -33,7 +34,8 @@ Resources:
         - !Ref Layer
       Environment:
         Variables:
-          Bucket: !Ref SamplebucketArn
+          SamplebucketName: !Ref SamplebucketName
+          BucketArn: !Ref SamplebucketArn
       Events:
         SampleLambdaApi:
           Type: Api

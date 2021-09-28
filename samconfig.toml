@@ -7,5 +7,6 @@ s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-14fl2dut57evr"
 s3_prefix = "sam-nested-app"
 region = "us-east-1"
 confirm_changeset = true
-capabilities = "CAPABILITY_IAM"
+capabilities = "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM"
 image_repositories = []
+parameter_overrides = "ENV=\"dev\""
