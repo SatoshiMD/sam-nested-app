@@ -1,5 +1,6 @@
 import json
 import os
+import boto3
 
 from my_layer import sample_summation
 
@@ -25,8 +26,15 @@ def lambda_handler(event, context):
 
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
-    bucket = os.getenv('Bucket')
+    bucket = os.getenv('SamplebucketName')
     print(bucket)
+
+    client = boto3.client('s3')
+    response = client.get_object(
+        Bucket=bucket,
+        Key='power-calc.py'
+    )
+    print(response)
 
     arr = [i for i in range(10)]
     s = sample_summation(arr)
