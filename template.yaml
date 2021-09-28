@@ -33,7 +33,7 @@ Resources:
         ENV: !Ref ENV
         SamplebucketName: !Ref SampleBucket
         SamplebucketArn: !GetAtt SampleBucket.Arn
-        ApiId: !GetAtt SampleRestApi.Arn
+        # ApiId: !GetAtt SampleRestApi.Arn
 
 Outputs:
   SampleMyLayer:
