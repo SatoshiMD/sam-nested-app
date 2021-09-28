@@ -32,6 +32,17 @@ Resources:
         ENV: !Ref ENV
         SamplebucketName: !Ref SampleBucket
         SamplebucketArn: !GetAtt SampleBucket.Arn
+  SampleMyAnotherLambdas:
+    Type: AWS::Serverless::Application
+    DependsOn:
+      - SampleMyLayer
+      - SampleBucket
+    Properties:
+      Location: sam-lambda-another-layer/template.yaml
+      Parameters:
+        ENV: !Ref ENV
+        SamplebucketName: !Ref SampleBucket
+        SamplebucketArn: !GetAtt SampleBucket.Arn
 
 Outputs:
   SampleMyLayer:
