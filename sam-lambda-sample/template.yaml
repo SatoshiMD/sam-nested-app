@@ -14,11 +14,12 @@ Parameters:
     Type: String
   Layer:
     Type: String
-    Default: arn:aws:lambda:us-east-1:108346452320:layer:sample-my-layer:1
-    # Default: ''
+    Default: ''
   SamplebucketName:
     Type: String
   SamplebucketArn:
+    Type: String
+  SampleRoleArn:
     Type: String
 
 Resources:
@@ -31,14 +32,8 @@ Resources:
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
-      Runtime: python3.9
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Action:
-                - "s3:*"
-              Resource: "*"
+      Runtime: python3.7
+      Role: !Ref SampleRoleArn
       Layers:
         - !Ref Layer
       Environment:

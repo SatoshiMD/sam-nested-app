@@ -18,6 +18,8 @@ Parameters:
     Type: String
   SamplebucketArn:
     Type: String
+  SampleRoleArn:
+    Type: String
 
 Resources:
   HelloWorldFunction:
@@ -25,7 +27,8 @@ Resources:
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.7
+      Role: !Ref SampleRoleArn
       Environment:
         Variables:
           SamplebucketName: !Ref SamplebucketName
@@ -42,6 +45,3 @@ Outputs:
   HelloWorldFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn

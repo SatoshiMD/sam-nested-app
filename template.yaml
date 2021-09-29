@@ -11,10 +11,51 @@ Parameters:
     Default: satoshi
 
 Resources:
+  SampleLambdaIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies:
+        - PolicyName: sample-lambda-role
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ec2:CreateNetworkInterface'
+                  - 'ec2:DescribeNetworkInterfaces'
+                  - 'ec2:DeleteNetworkInterface'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 's3:*'
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                  - lambda:AddPermission
+                Resource: '*'
   SampleBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "", [ "sample-bucket", "-", "satoshi"] ]
+      BucketName: "sample-bucket-for-nested-sam"
   SampleMyLayer:
     Type: AWS::Serverless::Application
     Properties:
@@ -24,6 +65,7 @@ Resources:
   SampleMyLambdas:
     Type: AWS::Serverless::Application
     DependsOn:
+      - SampleLambdaIAMRole
       - SampleMyLayer
       - SampleBucket
     Properties:
@@ -32,19 +74,25 @@ Resources:
         ENV: !Ref ENV
         SamplebucketName: !Ref SampleBucket
         SamplebucketArn: !GetAtt SampleBucket.Arn
+        SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
   SampleMyAnotherLambdas:
     Type: AWS::Serverless::Application
     DependsOn:
+      - SampleLambdaIAMRole
       - SampleMyLayer
       - SampleBucket
     Properties:
-      Location: sam-lambda-another-layer/template.yaml
+      Location: sam-lambda-another-lambda/template.yaml
       Parameters:
         ENV: !Ref ENV
         SamplebucketName: !Ref SampleBucket
         SamplebucketArn: !GetAtt SampleBucket.Arn
+        SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
 
 Outputs:
+  SampleLambdaIAMRole:
+    Description: "Sample Role ARN"
+    Value: !GetAtt SampleLambdaIAMRole.Arn
   SampleMyLayer:
     Description: "Sample Layer ARN"
     Value: !Ref SampleMyLayer
