@@ -12,43 +12,89 @@ Globals:
 Parameters:
   ENV:
     Type: String
-  Layer:
-    Type: String
-    Default: ''
   SamplebucketName:
     Type: String
   SamplebucketArn:
     Type: String
   SampleRoleArn:
     Type: String
+  LayerName:
+    Type: String
+    Default: MyLayer
+  SampleRestApiId:
+    Type: String
+  RootApiResourceId:
+    Type: String
 
 Resources:
-  SampleRestApi:
-    Type: AWS::Serverless::Api
+  SampleLambdaRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties: 
+      CloneFrom: !Ref SampleRestApiId
+  SampleLambdaApiResource:
+    Type: 'AWS::ApiGateway::Resource'
     Properties:
-      StageName: dev
+      RestApiId: !Ref SampleLambdaRestApi
+      ParentId: !Ref RootApiResourceId
+  # SampleLambdaDeployment:
+  #   Type: AWS::ApiGateway::Deployment
+  #   DependsOn:
+  #     - SampleLambdaRestApi
+  #   Properties:
+  #     RestApiId: !Ref SampleLambdaRestApi
+  #     Description: Sample lambda api deployment
+  #     StageName: !Ref ENV
   SampleLambdaFunction:
     Type: AWS::Serverless::Function
+    # DependsOn:
+    #   - SampleLambdaDeployment
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
       Runtime: python3.7
       Role: !Ref SampleRoleArn
-      Layers:
-        - !Ref Layer
+      # Layers:
+      #   - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:${LayerName}:1'
       Environment:
         Variables:
           SamplebucketName: !Ref SamplebucketName
           BucketArn: !Ref SamplebucketArn
-      Events:
-        SampleLambdaApi:
-          Type: Api
-          Properties:
-            Path: /hello-world
-            Method: get
-            RestApiId: !Ref SampleRestApi
+      # Events:
+      #   SampleLambdaRestApi:
+      #     Type: Api
+      #     Properties:
+      #       Path: /sample-lambda
+      #       Method: get
+      #       RestApiId: !Ref SampleLambdaRestApi
+  # SampleLambdaPermission:
+  #   Type: AWS::Lambda::Permission
+  #   DependsOn:
+  #     - SampleLambdaFunction
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName: !GetAtt SampleLambdaFunction.Arn
+  #     Principal: apigateway.amazonaws.com
+  #     SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SampleLambdaRestApi}/${ENV}/*'
+  # SampleLambdaApiMethod:
+  #   DependsOn:
+  #     - SampleLambdaPermission
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     AuthorizationType: NONE
+  #     HttpMethod: ANY
+  #     Integration:
+  #       IntegrationHttpMethod: POST
+  #       Type: AWS_PROXY
+  #       Uri: !Sub
+  #         - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+  #         - lambdaArn: !GetAtt SampleLambdaFunction.Arn
+  #     ResourceId: !Ref RootApiResourceId
+  #     RestApiId: !Ref SampleLambdaRestApi
 
 Outputs:
+  # SampleLambdaRestApi:
+  #   Description: "Sample Lambda Rest Api"
+  #   Value: !Ref SampleLambdaRestApi
   SampleLambdaFunction:
     Description: "Sample Lambda Function ARN"
     Value: !GetAtt SampleLambdaFunction.Arn

@@ -23,6 +23,14 @@ Resources:
       CompatibleRuntimes:
         - python3.7
       RetentionPolicy: Retain
+  # PortalCoreLayerPermissionKxDev:
+  #   Type: AWS::Lambda::LayerVersionPermission
+  #   DeletionPolicy: Retain
+  #   UpdateReplacePolicy: Retain
+  #   Properties: 
+  #     Action: lambda:GetLayerVersion
+  #     LayerVersionArn: !Ref MyLayer
+  #     Principal: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
 
 Outputs:
   MyLayer:

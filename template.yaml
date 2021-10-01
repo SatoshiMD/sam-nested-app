@@ -50,6 +50,57 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: "sample-bucket-for-nested-sam"
+  SampleRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Description: "Sample rest api"
+      Name: SampleRestApi
+  SampleProxyResource:
+    Type: 'AWS::ApiGateway::Resource'
+    DependsOn:
+      - SampleRestApi
+    Properties:
+      RestApiId: !Ref SampleRestApi
+      ParentId: !GetAtt 
+        - SampleRestApi
+        - RootResourceId
+      PathPart: '{proxy+}'
+  SampleApiMethod:
+    Type: AWS::ApiGateway::Method
+    DependsOn:
+      - SampleProxyResource
+    Properties:
+      RestApiId: !Ref SampleRestApi
+      ResourceId: !Ref SampleProxyResource
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        IntegrationResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
+            method.response.header.Access-Control-Allow-Methods: '''OPTIONS,PUT,POST,GET,DELETE'''
+            method.response.header.Access-Control-Allow-Origin: '''*'''
+          ResponseTemplates:
+            application/json: ''
+          StatusCode: '200'
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        Type: MOCK
+      MethodResponses:
+      - ResponseModels: {}
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: true
+          method.response.header.Access-Control-Allow-Methods: true
+          method.response.header.Access-Control-Allow-Origin: true
+        StatusCode: '200'
+  SampleDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - SampleApiMethod
+    Properties:
+      RestApiId: !Ref SampleRestApi
+      Description: Sample deployment
+      StageName: !Ref ENV
   SampleMyLayer:
     Type: AWS::Serverless::Application
     Properties:
@@ -60,6 +111,7 @@ Resources:
     Type: AWS::Serverless::Application
     DependsOn:
       - SampleLambdaIAMRole
+      - SampleDeployment
       - SampleMyLayer
       - SampleBucket
     Properties:
@@ -69,10 +121,14 @@ Resources:
         SamplebucketName: !Ref SampleBucket
         SamplebucketArn: !GetAtt SampleBucket.Arn
         SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
+        SampleRestApiId: !Ref SampleRestApi
+        RootApiResourceId: !Ref  SampleRestApi
   SampleMyAnotherLambdas:
     Type: AWS::Serverless::Application
     DependsOn:
       - SampleLambdaIAMRole
+      - SampleRestApi
+      - SampleDeployment
       - SampleMyLayer
       - SampleBucket
     Properties:
@@ -82,8 +138,19 @@ Resources:
         SamplebucketName: !Ref SampleBucket
         SamplebucketArn: !GetAtt SampleBucket.Arn
         SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
+        # SampleRestApiId: !Ref SampleRestApi
+        # RootApiResourceId: !GetAtt  SampleRestApi.RootResourceId
 
 Outputs:
+  SampleRestApi:
+    Description: "SampleRestApi"
+    Value: !Ref SampleRestApi
+  # SampleProxyResource:
+  #   Description: "SampleProxyResource"
+  #   Value: !Ref SampleProxyResource
+  # SampleApiMethod:
+  #   Description: "SampleApiMethod"
+  #   Value: !Ref SampleApiMethod
   SampleLambdaIAMRole:
     Description: "Sample Role ARN"
     Value: !GetAtt SampleLambdaIAMRole.Arn
