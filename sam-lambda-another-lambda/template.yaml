@@ -12,11 +12,7 @@ Globals:
 
 
 Parameters:
-  ENV:
-    Type: String
-  SamplebucketName:
-    Type: String
-  SamplebucketArn:
+  Env:
     Type: String
   SampleRoleArn:
     Type: String
@@ -27,19 +23,9 @@ Resources:
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.9
       Role: !Ref SampleRoleArn
-      Environment:
-        Variables:
-          SamplebucketName: !Ref SamplebucketName
-          BucketArn: !Ref SamplebucketArn
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Action:
-                - "s3:*"
-              Resource: "*"
+      FunctionName: sample-another-lambda
 
 Outputs:
   HelloWorldFunction:

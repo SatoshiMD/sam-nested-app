@@ -11,7 +11,7 @@ Globals:
     Timeout: 30
 
 Parameters:
-  ENV:
+  Env:
     Type: String
 
 Resources:
@@ -21,7 +21,7 @@ Resources:
       LayerName: MyLayer
       ContentUri: my_layer/
       CompatibleRuntimes:
-        - python3.7
+        - python3.9
       RetentionPolicy: Retain
   # PortalCoreLayerPermissionKxDev:
   #   Type: AWS::Lambda::LayerVersionPermission
