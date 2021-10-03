@@ -19,11 +19,8 @@ def lambda_handler(event, context):
     s = sample_summation(arr)
 
     return {
-        "statusCode": 200,
-        "body": json.dumps(
-            {
-                "message": "hello world",
-                "sum": s
-            }
-        ),
+        "body": {
+            "message": "hello world",
+            "sum": s
+        }
     }
