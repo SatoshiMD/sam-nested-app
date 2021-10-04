@@ -83,7 +83,7 @@ Resources:
       Handler: lambda_proxy.lambda_handler
       Runtime: python3.9
       Description: Example Lambda function
-      FunctionName: ApiProxyFunction
+      FunctionName: !Sub ${Env}-Api-proxy-function
       Policies:
         - Version: 2012-10-17
           Statement:
@@ -115,3 +115,6 @@ Outputs:
   SampleMyLambdas:
     Description: "Sample My Lambdas ARN"
     Value: !Ref SampleMyLambdas
+  SampleMyLambda1Name:
+    Description: "SampleMyLambdas1"
+    Value: !GetAtt SampleMyLambdas.Outputs.SampleLambdaFunctionName

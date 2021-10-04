@@ -23,11 +23,14 @@ Resources:
       Handler: app.lambda_handler
       Runtime: python3.9
       Role: !Ref SampleRoleArn
-      FunctionName: sample-lambda
-      # Layers:
-      #   - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:${LayerName}:1'
+      FunctionName: !Sub ${Env}-sample-lambda
+      Layers:
+        - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample-my-layer:1'
 
 Outputs:
   SampleLambdaFunction:
     Description: "Sample Lambda Function ARN"
     Value: !GetAtt SampleLambdaFunction.Arn
+  SampleLambdaFunctionName:
+    Description: "Sample Lambda Function ARN"
+    Value: !Sub ${Env}-sample-lambda

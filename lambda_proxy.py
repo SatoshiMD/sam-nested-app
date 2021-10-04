@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     try:
         print(event)
 
-        path = event.get("path")
+        path = event.get("pathParameters").get("proxy")
         params = path.split('/')
         lambda_name = params[0]
 
