@@ -8,9 +8,8 @@ def lambda_handler(event, context):
     try:
         print(event)
 
-        path = event.get("pathParameters").get("proxy")
-        params = path.split('/')
-        lambda_name = params[0]
+        lambda_name = event.get("pathParameters").get("service")
+        params = event.get("pathParameters").get("params")
 
         params = {
             'FunctionName': lambda_name,

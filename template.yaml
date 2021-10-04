@@ -81,7 +81,7 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: lambda_proxy.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.7
       FunctionName: !Sub ${Env}-api-proxy-function
       Policies:
         - Version: 2012-10-17
@@ -102,7 +102,7 @@ Resources:
           Type: Api
           Properties:
             Method: any
-            Path: 'api/{proxy+}'
+            Path: 'api/{app}/{service}/{params+}'
 
 Outputs:
   SampleLambdaIAMRole:

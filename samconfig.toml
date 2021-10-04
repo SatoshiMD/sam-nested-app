@@ -3,7 +3,7 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "sam-nested-lambda-proxy"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-14fl2dut57evr"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1gvmwqbblk559"
 s3_prefix = "sam-nested-lambda-proxy"
 region = "us-east-1"
 confirm_changeset = true
