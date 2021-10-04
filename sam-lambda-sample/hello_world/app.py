@@ -10,8 +10,6 @@ def lambda_handler(event, context):
     s = sample_summation(arr)
 
     return {
-        "body": {
-            "message": "hello world",
-            "sum": s
-        }
+        "message": "hello world",
+        "sum": s
     }
