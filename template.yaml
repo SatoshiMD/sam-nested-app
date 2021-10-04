@@ -83,7 +83,7 @@ Resources:
       Handler: lambda_proxy.lambda_handler
       Runtime: python3.9
       Description: Example Lambda function
-      FunctionName: !Sub ${Env}-Api-proxy-function
+      FunctionName: !Sub ${Env}-api-proxy-function
       Policies:
         - Version: 2012-10-17
           Statement:

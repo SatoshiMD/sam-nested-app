@@ -1,4 +1,5 @@
 import boto3
+import json
 
 client = boto3.client('lambda')
 
@@ -21,15 +22,21 @@ def lambda_handler(event, context):
 
         response = client.invoke(**params)
 
-        print(response['Payload'].read())
+        print(json.loads(response['Payload'].read()))
         return {
             "isBase64Encoded": False,
             "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "body": response['Payload'].read()
         }
     except Exception as e:
         return {
             "isBase64Encoded": False,
             "statusCode": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "body": str(e)
         }
