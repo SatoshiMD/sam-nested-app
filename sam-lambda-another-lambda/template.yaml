@@ -25,7 +25,7 @@ Resources:
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.7
       Role: !Ref SampleRoleArn
       FunctionName: !Sub ${Env}-sample-another-lambdaEvents:
       Events:

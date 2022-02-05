@@ -8,9 +8,8 @@ def lambda_handler(event, context):
     try:
         print(event)
 
-        path = event.get("pathParameters").get("proxy")
-        params = path.split('/')
-        lambda_name = params[0]
+        lambda_name = event.get("pathParameters").get("service")
+        url_params = event.get("pathParameters").get("params")
 
         params = {
             'FunctionName': lambda_name,
@@ -18,7 +17,10 @@ def lambda_handler(event, context):
         }
 
         if event.get("httpMethod") != 'GET':
-            params['Payload'] = event.get("body")
+            params['Payload'] = {
+                "parameters": url_params,
+                "body": event.get("body")
+            }
 
         response = client.invoke(**params)
         data = response['Payload'].read().decode('utf8').replace('"', '\"')

@@ -21,11 +21,11 @@ Resources:
     Properties:
       CodeUri: hello_world/
       Handler: app.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.7
       Role: !Ref SampleRoleArn
       FunctionName: !Sub ${Env}-sample-lambda
-      Layers:
-        - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample-my-layer:1'
+      # Layers:
+      #   - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample-my-layer:1'
 
 Outputs:
   SampleLambdaFunction:

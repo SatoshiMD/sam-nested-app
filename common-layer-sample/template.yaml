@@ -18,21 +18,24 @@ Resources:
   MyLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: MyLayer
+      LayerName: !Sub ${Env}-my-layer
       ContentUri: my_layer/
       CompatibleRuntimes:
-        - python3.9
+        - python3.7
       RetentionPolicy: Retain
-  # PortalCoreLayerPermissionKxDev:
-  #   Type: AWS::Lambda::LayerVersionPermission
-  #   DeletionPolicy: Retain
-  #   UpdateReplacePolicy: Retain
-  #   Properties: 
-  #     Action: lambda:GetLayerVersion
-  #     LayerVersionArn: !Ref MyLayer
-  #     Principal: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+  PortalCoreLayerPermissionKxDev:
+    Type: AWS::Lambda::LayerVersionPermission
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties: 
+      Action: lambda:GetLayerVersion
+      LayerVersionArn: !Ref MyLayer
+      Principal: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
 
 Outputs:
   MyLayer:
     Description: Sample My Layer ARN"
     Value: !Ref MyLayer
+  MyLayerName:
+    Description: Sample My Layer Name"
+    Value: !Sub ${Env}-my-layer
