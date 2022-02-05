@@ -14,6 +14,8 @@ Parameters:
     Default: smidorikawa.com
 
 Resources:
+  SampleBucket:
+    Type: AWS::S3::Bucket
   SampleLambdaIAMRole:
     Type: AWS::IAM::Role
     Properties:
@@ -73,36 +75,7 @@ Resources:
       Parameters:
         Env: !Ref Env
         SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
-  LambdaFunction:
-    Type: AWS::Serverless::Function
-    DependsOn:
-      - SampleMyLambdas
-      - SampleMyAnotherLambdas
-    Properties:
-      CodeUri: ./
-      Handler: lambda_proxy.lambda_handler
-      Runtime: python3.9
-      FunctionName: !Sub ${Env}-api-proxy-function
-      Policies:
-        - Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'logs:CreateLogGroup'
-                - 'logs:CreateLogStream'
-                - 'logs:PutLogEvents'
-              Resource: 'arn:aws:logs:*:*:*'
-            - Effect: Allow
-              Action:
-                - lambda:InvokeFunction
-                - lambda:AddPermission
-              Resource: '*'
-      Events:
-        ProxyApiGetEvent:
-          Type: Api
-          Properties:
-            Method: any
-            Path: 'api/{proxy+}'
+        SampleBucket: !Ref SampleBucket
 
 Outputs:
   SampleLambdaIAMRole:
@@ -114,6 +87,3 @@ Outputs:
   SampleMyLambdas:
     Description: "Sample My Lambdas ARN"
     Value: !Ref SampleMyLambdas
-  SampleMyLambda1Name:
-    Description: "SampleMyLambdas1"
-    Value: !GetAtt SampleMyLambdas.Outputs.SampleLambdaFunctionName

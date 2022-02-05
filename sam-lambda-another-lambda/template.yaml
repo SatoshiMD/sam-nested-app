@@ -16,6 +16,8 @@ Parameters:
     Type: String
   SampleRoleArn:
     Type: String
+  SampleBucket:
+    Type: String
 
 Resources:
   HelloWorldFunction:
@@ -25,7 +27,19 @@ Resources:
       Handler: app.lambda_handler
       Runtime: python3.9
       Role: !Ref SampleRoleArn
-      FunctionName: !Sub ${Env}-sample-another-lambda
+      FunctionName: !Sub ${Env}-sample-another-lambdaEvents:
+      Events:
+        S3Event:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: !Ref SampleBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                - Name: suffix
+                  Value: ".json"
 
 Outputs:
   HelloWorldFunction:

@@ -1,22 +1,17 @@
-import os
+import json
+
+import boto3
 
 
 def lambda_handler(event, context):
-    bucket = os.getenv('SamplebucketName')
-    print(bucket)
+    print(event)
 
-    # client = boto3.client('s3')
-    # response = client.list_objects(
-    #     Bucket=bucket
-    # )
-    # print(response)
+    client = boto3.client('s3')
 
     return {
         "statusCode": 200,
         "body": {
             "message": "hello world",
-            "bucket": {
-                "SamplebucketName": bucket
-            }
+            "event": event
         }
     }
