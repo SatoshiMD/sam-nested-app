@@ -48,8 +48,11 @@ Resources:
                 Resource: 'arn:aws:logs:*:*:*'
               - Effect: Allow
                 Action:
-                  - lambda:InvokeFunction
-                  - lambda:AddPermission
+                  - lambda:*
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - dynamodb:*
                 Resource: '*'
   SampleMyLayer:
     Type: AWS::Serverless::Application
@@ -66,16 +69,13 @@ Resources:
       Parameters:
         Env: !Ref Env
         SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
-  SampleMyAnotherLambdas:
-    Type: AWS::Serverless::Application
-    DependsOn:
-      - SampleMyLayer
+  SampleStepfunction:
     Properties:
       Location: sam-lambda-another-lambda/template.yaml
       Parameters:
         Env: !Ref Env
         SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
-        SampleBucket: !Ref SampleBucket
+
 
 Outputs:
   SampleLambdaIAMRole:

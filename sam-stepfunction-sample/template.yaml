@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-step-function-example
+
+  Sample SAM Template for sam-step-function-example
+
+Parameters:
+  Env:
+    Type: String
+  SampleRoleArn:
+    Type: String
+
+Resources:
+  StockTradingStateMachine:
+    Type: AWS::Serverless::StateMachine # More info about State Machine Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html
+    Properties:
+      Definition:
+        Comment: A state machine that does mock stock trading.
+        StartAt: Check Stock Value
+        States:
+          Check Stock Value:
+            Type: Task
+            Resource: "${StockCheckerFunctionArn}"
+            Retry:
+              - ErrorEquals:
+                - States.TaskFailed
+                IntervalSeconds: 15
+                MaxAttempts: 5
+                BackoffRate: 1.5
+            Next: Buy or Sell?
+          Buy or Sell?:
+            Type: Choice
+            Choices:
+              - Variable: "$.stock_price"
+                NumericLessThanEquals: 50
+                Next: Buy Stock
+            Default: Sell Stock
+          Sell Stock:
+            Type: Task
+            Resource: "${StockSellerFunctionArn}"
+            Retry:
+              - ErrorEquals:
+                - States.TaskFailed
+                IntervalSeconds: 2
+                MaxAttempts: 3
+                BackoffRate: 1
+            Next: Record Transaction
+          Buy Stock:
+            Type: Task
+            Resource: "${StockBuyerFunctionArn}"
+            Retry:
+              - ErrorEquals:
+                - States.TaskFailed
+                IntervalSeconds: 2
+                MaxAttempts: 3
+                BackoffRate: 1
+            Next: Record Transaction
+          Record Transaction:
+            Type: Task
+            Resource: "${DDBPutItem}"
+            Parameters:
+              TableName: "${DDBTable}"
+              Item:
+                Id:
+                  S.$: "$.id"
+                Type:
+                  S.$: "$.type"
+                Price:
+                  N.$: "$.price"
+                Quantity:
+                  N.$: "$.qty"
+                Timestamp:
+                  S.$: "$.timestamp"
+            Retry:
+              - ErrorEquals:
+                - States.TaskFailed
+                IntervalSeconds: 20
+                MaxAttempts: 5
+                BackoffRate: 10
+            End: true
+      DefinitionSubstitutions:
+        StockCheckerFunctionArn: !GetAtt StockCheckerFunction.Arn
+        StockSellerFunctionArn: !GetAtt StockSellerFunction.Arn
+        StockBuyerFunctionArn: !GetAtt StockBuyerFunction.Arn
+        DDBPutItem: !Sub arn:${AWS::Partition}:states:::dynamodb:putItem
+        DDBTable: !Ref TransactionTable
+      RoleArn: !Ref SampleRoleArn
+      Events:
+        HourlyTradingSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-statemachine-schedule.html
+          Properties:
+            Description: Schedule to run the stock trading state machine every hour
+            Enabled: False # This schedule is disabled by default to avoid incurring charges.
+            Schedule: "rate(1 hour)"
+
+  StockCheckerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
+    Properties:
+      CodeUri: functions/stock-checker/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+
+  StockSellerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/stock-seller/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+
+  StockBuyerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/stock-buyer/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+
+  TransactionTable:
+    Type: AWS::Serverless::SimpleTable # More info about SimpleTable Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-simpletable.html
+    Properties:
+      PrimaryKey:
+        Name: Id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+Outputs:
+  StockTradingStateMachineArn:
+    Description: "Stock Trading state machine ARN"
+    Value: !Ref StockTradingStateMachine
+  StockTradingStateMachineRole:
+    Description: "IAM Role created for Stock Trading state machine based on the specified SAM Policy Templates"
+    Value: !GetAtt StockTradingStateMachineRole.Arn

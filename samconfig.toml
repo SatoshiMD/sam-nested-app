@@ -2,11 +2,11 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "sam-nested-lambda-proxy"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1gvmwqbblk559"
-s3_prefix = "sam-nested-lambda-proxy"
+stack_name = "sam-nested-app"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-14fl2dut57evr"
+s3_prefix = "sam-nested-app"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM"
 image_repositories = []
-parameter_overrides = "ENV=\"satoshi\""
+parameter_overrides = "Env=\"satoshi\" Domain=\"smidorikawa.com\""
