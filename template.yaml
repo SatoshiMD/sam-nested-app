@@ -54,12 +54,6 @@ Resources:
                 Action:
                   - dynamodb:*
                 Resource: '*'
-  SampleMyLayer:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: common-layer-sample/template.yaml
-      Parameters:
-        Env: !Ref Env
   SampleMyLambdas:
     Type: AWS::Serverless::Application
     DependsOn:
