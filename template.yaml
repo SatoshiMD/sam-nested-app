@@ -1,10 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
-Globals:
-  Function:
-    Timeout: 5
-
 Parameters:
   Env:
     Type: String
@@ -56,16 +52,15 @@ Resources:
                 Resource: '*'
   SampleMyLambdas:
     Type: AWS::Serverless::Application
-    DependsOn:
-      - SampleMyLayer
     Properties:
       Location: sam-lambda-sample/template.yaml
       Parameters:
         Env: !Ref Env
         SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
   SampleStepfunction:
+    Type: AWS::Serverless::Application
     Properties:
-      Location: sam-lambda-another-lambda/template.yaml
+      Location: sam-stepfunction-sample/template.yaml
       Parameters:
         Env: !Ref Env
         SampleRoleArn: !GetAtt SampleLambdaIAMRole.Arn
@@ -75,9 +70,6 @@ Outputs:
   SampleLambdaIAMRole:
     Description: "Sample Role ARN"
     Value: !GetAtt SampleLambdaIAMRole.Arn
-  SampleMyLayer:
-    Description: "Sample Layer ARN"
-    Value: !Ref SampleMyLayer
   SampleMyLambdas:
     Description: "Sample My Lambdas ARN"
     Value: !Ref SampleMyLambdas

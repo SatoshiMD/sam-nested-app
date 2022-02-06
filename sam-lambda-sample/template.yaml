@@ -19,7 +19,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: A Lambda function that logs the payload of messages sent to an associated SQS queue.
-      Role: !Ref SampleRoleArn
       Runtime: nodejs14.x
       Architectures:
         - x86_64
@@ -33,3 +32,5 @@ Resources:
             Queue: !GetAtt SimpleQueue.Arn
       MemorySize: 128
       Timeout: 25 # Chosen to be less than the default SQS Visibility Timeout of 30 seconds
+      Policies:
+        - AWSLambdaBasicExecutionRole

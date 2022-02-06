@@ -143,4 +143,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+samconfig.toml
+
 # End of https://www.toptal.com/developers/gitignore/api/python
